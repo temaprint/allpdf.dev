@@ -1,0 +1,447 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import booksData from '../../data/books.json';
+
+export async function getStaticPaths() {
+  return booksData
+    .filter((book) => book.title && book.title.trim() !== '')
+    .map((book) => {
+      const slug = book.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      return {
+        params: { slug },
+        props: { book }
+      };
+    })
+    .filter(({ params }) => params.slug && params.slug.trim() !== '');
+}
+
+const { book } = Astro.props;
+const { title, src_pdf, src_pic } = book;
+
+// SEO data
+const pageTitle = `${title} - Download PDF | AllPDF.dev`;
+const pageDescription = `Download ${title} in PDF format. Read instantly on any device. High-quality digital book available for free download at AllPDF.dev.`;
+const canonicalUrl = `https://allpdf.dev/book/${Astro.params.slug}`;
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+	<!-- Additional SEO meta tags -->
+	<Fragment slot="head">
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:image" content={src_pic} />
+		<meta property="article:author" content="AllPDF.dev" />
+		
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalUrl} />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		<meta name="twitter:image" content={src_pic} />
+		
+		<!-- JSON-LD Structured Data -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Book",
+			"name": "{title}",
+			"url": "{canonicalUrl}",
+			"image": "{src_pic}",
+			"description": "Download {title} in PDF format",
+			"publisher": {
+				"@type": "Organization",
+				"name": "AllPDF.dev",
+				"url": "https://allpdf.dev"
+			},
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock"
+			}
+		}
+		</script>
+	</Fragment>
+	<Header />
+	
+	<main class="book-page">
+		<div class="container">
+			<!-- Breadcrumb -->
+			<nav class="breadcrumb" aria-label="Breadcrumb">
+				<a href="/" class="breadcrumb-link">Home</a>
+				<span class="breadcrumb-separator">/</span>
+				<span class="breadcrumb-current">{title}</span>
+			</nav>
+
+			<!-- Book Details -->
+			<article class="book-details">
+				<div class="book-image-section">
+					<div class="book-cover">
+						<img 
+							src={src_pic} 
+							alt={`${title} book cover`}
+							class="cover-image"
+							width="400"
+							height="600"
+						/>
+					</div>
+				</div>
+
+				<div class="book-info-section">
+					<header class="book-header">
+						<h1 class="book-title">{title}</h1>
+						<p class="book-format">PDF Format • Digital Download</p>
+					</header>
+
+					<div class="book-actions">
+						<a 
+							href={src_pdf} 
+							class="primary-btn"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={`Download ${title} PDF`}
+						>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+								<polyline points="7,10 12,15 17,10"/>
+								<line x1="12" y1="15" x2="12" y2="3"/>
+							</svg>
+							Download PDF
+						</a>
+						
+						<a 
+							href={src_pdf} 
+							class="secondary-btn"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={`Read ${title} online`}
+						>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+								<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+							</svg>
+							Read Online
+						</a>
+					</div>
+
+					<div class="book-features">
+						<div class="feature-item">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+								<polyline points="14,2 14,8 20,8"/>
+							</svg>
+							<div>
+								<h3>High Quality PDF</h3>
+								<p>Optimized for all devices and screen sizes</p>
+							</div>
+						</div>
+
+						<div class="feature-item">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+								<polyline points="7,10 12,15 17,10"/>
+								<line x1="12" y1="15" x2="12" y2="3"/>
+							</svg>
+							<div>
+								<h3>Instant Download</h3>
+								<p>Download immediately with one click</p>
+							</div>
+						</div>
+
+						<div class="feature-item">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="2" y="4" width="20" height="16" rx="2"/>
+								<path d="M7 15h0M2 10h20"/>
+							</svg>
+							<div>
+								<h3>All Devices</h3>
+								<p>Compatible with desktop, tablet, and mobile</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+
+			<!-- Back to Library -->
+			<div class="back-section">
+				<a href="/" class="back-link">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<polyline points="15,18 9,12 15,6"/>
+					</svg>
+					Back to Library
+				</a>
+			</div>
+		</div>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	.book-page {
+		padding: 40px 0 80px 0;
+		min-height: 70vh;
+	}
+
+	/* Breadcrumb */
+	.breadcrumb {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 40px;
+		font-size: 14px;
+	}
+
+	.breadcrumb-link {
+		color: #0066FF;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.breadcrumb-link:hover {
+		color: #0052CC;
+		text-decoration: underline;
+	}
+
+	.breadcrumb-separator {
+		color: #666666;
+	}
+
+	.breadcrumb-current {
+		color: #666666;
+	}
+
+	/* Book Details */
+	.book-details {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 60px;
+		margin-bottom: 60px;
+	}
+
+	.book-image-section {
+		display: flex;
+		justify-content: center;
+	}
+
+	.book-cover {
+		max-width: 400px;
+		width: 100%;
+	}
+
+	.cover-image {
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+		transition: transform 0.3s ease;
+	}
+
+	.cover-image:hover {
+		transform: scale(1.02);
+	}
+
+	.book-info-section {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.book-header {
+		margin-bottom: 40px;
+	}
+
+	.book-title {
+		font-size: 48px;
+		font-weight: 700;
+		color: #000000;
+		margin: 0 0 12px 0;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+	}
+
+	.book-format {
+		font-size: 18px;
+		color: #666666;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	.book-actions {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 50px;
+	}
+
+	.primary-btn {
+		background: #0066FF;
+		color: #ffffff;
+		text-decoration: none;
+		padding: 16px 32px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		transition: all 0.2s ease;
+		border: 2px solid #0066FF;
+	}
+
+	.primary-btn:hover {
+		background: #0052CC;
+		border-color: #0052CC;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
+	}
+
+	.secondary-btn {
+		background: transparent;
+		color: #0066FF;
+		text-decoration: none;
+		padding: 16px 32px;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		transition: all 0.2s ease;
+		border: 2px solid #0066FF;
+	}
+
+	.secondary-btn:hover {
+		background: #0066FF;
+		color: #ffffff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
+	}
+
+	.book-features {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.feature-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+	}
+
+	.feature-item svg {
+		color: #0066FF;
+		flex-shrink: 0;
+		margin-top: 4px;
+	}
+
+	.feature-item h3 {
+		font-size: 18px;
+		font-weight: 600;
+		color: #000000;
+		margin: 0 0 4px 0;
+	}
+
+	.feature-item p {
+		font-size: 14px;
+		color: #666666;
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	/* Back Section */
+	.back-section {
+		text-align: center;
+		padding-top: 40px;
+		border-top: 1px solid #e0e0e0;
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: #0066FF;
+		text-decoration: none;
+		font-weight: 500;
+		font-size: 16px;
+		transition: color 0.2s ease;
+	}
+
+	.back-link:hover {
+		color: #0052CC;
+		text-decoration: underline;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 968px) {
+		.book-details {
+			grid-template-columns: 1fr;
+			gap: 40px;
+			text-align: center;
+		}
+
+		.book-title {
+			font-size: 36px;
+		}
+
+		.book-actions {
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.book-page {
+			padding: 20px 0 60px 0;
+		}
+
+		.book-title {
+			font-size: 28px;
+		}
+
+		.book-actions {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.primary-btn,
+		.secondary-btn {
+			width: 100%;
+			max-width: 300px;
+			justify-content: center;
+		}
+
+		.book-features {
+			text-align: left;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.breadcrumb {
+			margin-bottom: 20px;
+		}
+
+		.book-details {
+			gap: 30px;
+		}
+
+		.book-title {
+			font-size: 24px;
+		}
+
+		.primary-btn,
+		.secondary-btn {
+			padding: 14px 24px;
+			font-size: 14px;
+		}
+	}
+</style>

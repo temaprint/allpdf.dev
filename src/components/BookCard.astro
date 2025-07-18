@@ -1,0 +1,159 @@
+---
+interface Props {
+	title: string;
+	src_pdf: string;
+	src_pic: string;
+}
+
+const { title, src_pdf, src_pic } = Astro.props;
+const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+---
+
+<article class="book-card">
+	<a href={`/book/${slug}`} class="book-link" aria-label={`View ${title} details`}>
+	<div class="book-image-container">
+		<img 
+			src={src_pic} 
+			alt={`${title} book cover`}
+			class="book-image"
+			loading="lazy"
+			width="200"
+			height="300"
+		/>
+		<div class="book-overlay">
+			<a 
+				href={`/book/${slug}`}
+				class="download-btn"
+				aria-label={`View ${title} details`}
+			>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+					<circle cx="12" cy="12" r="3"/>
+				</svg>
+				View Details
+			</a>
+			class="book-link"
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label={`Read ${title} online`}
+		>
+			Read Online
+		</a>
+	</div>
+</article>
+
+<style>
+	.book-card {
+		background: #ffffff;
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		overflow: hidden;
+		border: 1px solid #f0f0f0;
+	}
+
+	.book-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+	}
+
+	.book-card > .book-link {
+		text-decoration: none;
+		color: inherit;
+		display: block;
+	}
+	.book-image-container {
+		position: relative;
+		aspect-ratio: 2/3;
+		overflow: hidden;
+	}
+
+	.book-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+
+	.book-card:hover .book-image {
+		transform: scale(1.05);
+	}
+
+	.book-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.book-card:hover .book-overlay {
+		opacity: 1;
+	}
+
+	.download-btn {
+		background: #0066FF;
+		color: #ffffff;
+		text-decoration: none;
+		padding: 12px 24px;
+		border-radius: 8px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		transition: background 0.2s ease;
+		border: 2px solid #0066FF;
+		cursor: pointer;
+	}
+
+	.download-btn:hover {
+		background: #0052CC;
+		border-color: #0052CC;
+	}
+
+	.book-info {
+		padding: 20px;
+	}
+
+	.book-title {
+		margin: 0 0 12px 0;
+		font-size: 18px;
+		font-weight: 600;
+		color: #000000;
+		line-height: 1.4;
+	}
+
+	.book-info .book-link {
+		color: #0066FF;
+		text-decoration: none;
+		font-weight: 500;
+		font-size: 14px;
+		transition: color 0.2s ease;
+	}
+
+	.book-info .book-link:hover {
+		color: #0052CC;
+		text-decoration: underline;
+	}
+
+	@media (max-width: 768px) {
+		.book-info {
+			padding: 15px;
+		}
+
+		.book-title {
+			font-size: 16px;
+		}
+
+		.download-btn {
+			padding: 10px 20px;
+			font-size: 14px;
+		}
+	}
+</style>
