@@ -60,7 +60,7 @@ All commands are run from the root of the project, from a terminal:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/temaprint/allpdf.dev
    cd allpdf.dev
    ```
 
